@@ -1,10 +1,29 @@
 import { useState, useEffect } from 'react';
 const data = require('./data')
 
+// getting date
+function getToday() {
+  var today = new Date();
+  var dd = today.getDate();
+
+  var mm = today.getMonth() + 1;
+  var yyyy = today.getFullYear();
+  if (dd < 10) {
+    dd = '0' + dd;
+  }
+
+  if (mm < 10) {
+    mm = '0' + mm;
+  }
+  today = dd + '/' + mm + '/' + yyyy;
+  return today;
+}
+
 function App() {
 
 	const [todos, setTodos] = useState([])
 	const [todo, setTodo] = useState('')
+	const [errorMessage, setErrorMessage] = useState(null)
 
 	useEffect(() => {
 		setTodos(data.data)
@@ -15,8 +34,15 @@ function App() {
 	}
 
 	const addItem = (e) => {
-		setTodos([...todos, {id:Date.now(), text: todo, isCompleted: false, isTrashed: false}])
-		setTodo('')
+		if(todo.trim() === '') {
+			setErrorMessage('Cant add empty item...!')
+			setTimeout(() => {
+				setErrorMessage(null)
+			}, 5000)
+		} else {	
+			setTodos([...todos, {id:Date.now(), text: todo, isCompleted: false, isTrashed: false, date: getToday()}])
+			setTodo('')
+		}
 	}
 
 	const trashItem = (id) => {
@@ -68,6 +94,11 @@ function App() {
       	<div className="text-center my-3">
       		<input value={todo} onChange={handleTodoChange} className="w-2/4 mx-3 p-2 text-black focus:outline-none" placeholder="Add an Item" type="text" />
       		<button onClick={addItem} className="mx-2 border rounded bg-blue-700 focus:outline-none hover:bg-blue-600 px-5 py-2">ADD</button>
+      		<div>
+      			{
+      				errorMessage && <small className="text-red-500 font-bold text-md">{errorMessage}</small>
+      			}
+      		</div>
       	</div>
       	<div className="grid grid-cols-3 gap-3">
       		{/*pending items start*/}	
@@ -87,6 +118,7 @@ function App() {
 					      					</div>
 						      				<img onClick={() => {trashItem(item.id)}} className="cursor-pointer" src="./trash.svg" alt="trash" />
 					      				</div>
+					      				<small>Created : {item.date}</small>
 					      			</div>
 		      					)
 	      					}
@@ -114,6 +146,7 @@ function App() {
 					      					</div>
 						      				<img onClick={() => trashItem(item.id)} className="cursor-pointer" src="./trash.svg" alt="trash" />
 						   				</div>
+						   				<small>Created : {item.date}</small>
 						   			</div>
 		   						)
 	   						}
@@ -141,6 +174,7 @@ function App() {
 					      					</div>
 						      				<img onClick={() => permDel(item.id)} className="cursor-pointer" src="./close.svg" alt="trash" />
 						   				</div>
+						   				<small>Created : {item.date}</small>
 						   			</div>
 	   							)
 	   						}
