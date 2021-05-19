@@ -46,34 +46,32 @@ function App() {
 	}
 
 	const trashItem = (id) => {
-		todos.filter(item => {
-			if(item.id === id) {
-				item.isTrashed = true
-			}
-			return null
-		})
-		
-		setTodos([...todos])
+		setTodos(todos.filter(item => {
+					if(item.id === id) {
+						return item.isTrashed = true
+					}
+					return item
+				}))
 	}
 
 	const toggleTask = (id) => {
-		todos.filter(item => {
-			if(item.id === id) {
-				item.isCompleted = !item.isCompleted
-			}
-			return null
-		})
-		setTodos([...todos])
+		setTodos(todos.filter(item => {
+					if(item.id === id) {
+						item.isCompleted = !item.isCompleted
+					}
+					return item
+				}))
+		// setTodos([...todos])
 	}
 
 	const unTrash = (id) => {
-		 todos.filter(item => {
-		 	if(item.id === id) {
-		 		item.isTrashed = false
-		 	}
-		 	return null
-		 })
-		 setTodos([...todos])
+		 setTodos(todos.filter(item => {
+		 		 	if(item.id === id) {
+		 		 		item.isTrashed = false
+		 		 	}
+		 		 	return item
+		 		 }))
+		 // setTodos([...todos])
 	}
 
 	const permDel = (id) => {
@@ -93,7 +91,7 @@ function App() {
       	</div>
       	<div className="text-center my-3">
       		<input value={todo} onChange={handleTodoChange} className="w-2/4 mx-3 p-2 text-black focus:outline-none" placeholder="Add an Item" type="text" />
-      		<button onClick={addItem} className="mx-2 border rounded bg-blue-700 focus:outline-none hover:bg-blue-600 px-5 py-2">ADD</button>
+      		<button onClick={addItem} className="mx-2 rounded bg-blue-700 focus:outline-none hover:bg-blue-600 px-5 py-2">ADD</button>
       		<div>
       			{
       				errorMessage && <small className="text-red-500 font-bold text-md">{errorMessage}</small>
